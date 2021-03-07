@@ -6,6 +6,17 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  int bottomNavBarIndex;
+  PageController pageController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    bottomNavBarIndex = 0;
+    pageController = PageController(initialPage: bottomNavBarIndex);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +29,18 @@ class _MainPageState extends State<MainPage> {
               child: Container(
             color: Color(0xFFF6F7F9),
           )),
-          ListView(),
+          PageView(
+            controller: pageController,
+            children: [
+              Center(child: Text('My ticket')),
+              Center(child: Text('Movies')),
+            ],
+            onPageChanged: (index) {
+              setState(() {
+                bottomNavBarIndex = index;
+              });
+            },
+          ),
           customButtonNavBar(),
           Align(
             alignment: Alignment.bottomCenter,
@@ -45,22 +67,57 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
-}
 
-Widget customButtonNavBar() => Align(
-      alignment: Alignment.bottomCenter,
-      child: ClipPath(
-        clipper: BottomNavBarClipper(),
-        child: Container(
-          height: 70,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+  Widget customButtonNavBar() => Align(
+        alignment: Alignment.bottomCenter,
+        child: ClipPath(
+          clipper: BottomNavBarClipper(),
+          child: Container(
+            height: 70,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            ),
+            child: BottomNavigationBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              selectedItemColor: mainColor,
+              unselectedItemColor: Color(0xFFE5E5E5),
+              currentIndex: bottomNavBarIndex,
+              onTap: (index) {
+                setState(() {
+                  bottomNavBarIndex = index;
+                  pageController.jumpToPage(index);
+                });
+              },
+              items: [
+                BottomNavigationBarItem(
+                  icon: Container(
+                    margin: EdgeInsets.only(bottom: 6),
+                    height: 20,
+                    child: Image.asset((bottomNavBarIndex == 0)
+                        ? 'assets/ic_movie.png'
+                        : 'assets/ic_movie_gray.png'),
+                  ),
+                  label: 'My Tickets',
+                ),
+                BottomNavigationBarItem(
+                  icon: Container(
+                    margin: EdgeInsets.only(bottom: 6),
+                    height: 20,
+                    child: Image.asset((bottomNavBarIndex == 1)
+                        ? 'assets/ic_ticket.png'
+                        : 'assets/ic_ticket_gray.png'),
+                  ),
+                  label: 'My Tickets',
+                )
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+}
 
 class BottomNavBarClipper extends CustomClipper<Path> {
   @override
