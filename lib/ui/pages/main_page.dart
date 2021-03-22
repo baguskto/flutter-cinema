@@ -32,7 +32,7 @@ class _MainPageState extends State<MainPage> {
           PageView(
             controller: pageController,
             children: [
-              Center(child: Text('My ticket')),
+              MoviePage(),
               Center(child: Text('Movies')),
             ],
             onPageChanged: (index) {
@@ -49,7 +49,10 @@ class _MainPageState extends State<MainPage> {
               width: 46,
               margin: EdgeInsets.only(bottom: 42),
               child: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.bloc<UserBloc>().add(SignOut());
+                  AuthServices.signOut();
+                },
                 backgroundColor: accentColor2,
                 elevation: 0,
                 child: SizedBox(
