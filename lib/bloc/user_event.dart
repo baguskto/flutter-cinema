@@ -13,3 +13,12 @@ class LoadUser extends UserEvent {
 }
 
 class SignOut extends UserEvent {}
+
+class UpdateData extends UserEvent {
+  final String name;
+  final String profileImage;
+
+  UpdateData({this.name, this.profileImage});
+  @override
+  List<Object> get props => [name, profileImage];
+}
